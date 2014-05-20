@@ -1,0 +1,64 @@
+<div style="height:100px; width: 200px; background-color: blue; color: white;">
+       <p>Update every 60sec</p>
+       <p class="timer"></p>
+</div>
+
+<?php
+    $this->view->storylist->sortByAlphabet();
+    /** @var $story Story */
+    foreach($this->view->storylist->stories as $key => $story){
+?>
+        <div class="story" style="
+            padding-left: 100px;
+            border-style: solid;
+            border-width:2px;
+            border-color: #ff495a;">
+
+            <h3><?php echo $story->getTitle(); ?></h3>
+            <p><?php echo $story->getPubDate() ?></p>
+            <img src="<?php echo $story->getImageUrl(); ?>">
+            <p><?php echo $story->getDescription(); ?></p>
+            <br>
+            <a href="<?php echo $story->getLink();?>">Read More</a>
+            <br>
+            <br>
+        </div>
+
+<?php } ?>
+
+
+<?php
+/**
+ * Here we can set any interval we want in order to update feeds
+ * As default is set on page load
+ */
+?>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script rc="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+    // date
+    var start = new Date;
+    // set intervale
+    setInterval(function() {
+        var newdate = new Date;
+        $('.timer').text((newdate - start) / 1000 + " Seconds");
+        if(newdate - start >60000){
+            start = new Date;
+            updateXmlFeeds();
+        }
+    }, 1000);
+    // update xml file
+    function updateXmlFeeds(){
+        $.ajax({ url: '../functions/updatexml.php',
+            data: {
+                xml:    '<?php echo $model::$BBC_TECHNOLOGY;?>',
+                path:   '<?php echo $model::$BBC_TECHNOLOGY_XML;?>'
+            },
+            type: 'post',
+            success: function() {
+                alert("Xml file was update to the latest version");
+            }
+
+        });
+    }
+
+</script>
