@@ -1,0 +1,37 @@
+<form name="input" action="" method="post">
+    <input type="submit" name="t1" value="Task1">
+    <input type="submit" name="t2" value="Task2">
+</form>
+
+<?php
+
+if(isset($_POST['t1'])){
+    include_once("classes/Quiz.php");
+
+    $quiz = new Quiz();
+    $output = $quiz->makeAcall($quiz::$QUIZ_QUESTION);
+    $output = $quiz->filterAswer($output);
+    echo $output."<br>";
+    echo "Calling to: ".$quiz::$QUIZ_ANSWER.intval($output)."<br>";
+    $output = $quiz->makeAcall($quiz::$QUIZ_ANSWER.intval($output));
+    var_dump($output);
+
+}
+
+if(isset($_POST['t2'])){
+    include_once("classes/GambleAnalisys.php");
+    include_once("classes/SeasonModel.php");
+
+    $gamble = new GambleAnalisys();
+    $season = new SeasonModel();
+    $season = $season->getSeason2009and2010();
+    $gambleMoney = $gamble->analyseGamble($season);
+
+    foreach($gambleMoney as $team => $cash){
+        echo $team." : ".$cash."<br>";
+    }
+}
+
+?>
+
+
